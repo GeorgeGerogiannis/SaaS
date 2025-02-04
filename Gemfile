@@ -58,6 +58,6 @@ end
 
 group :test do
   gem "factory_bot_rails"
-  gem "shoulda-matchers", "~> 3.1"
+  gem "shoulda-matchers", "~> 6.4"
   gem "database_cleaner"
 end
