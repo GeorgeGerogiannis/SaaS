@@ -1,0 +1,265 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+components:
+  securitySchemes:
+    jwt_auth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: 'JWT token. Example: eyJhbGciOiJIUzI1NiJ9...'
+paths:
+  "/auth/login":
+    post:
+      summary: Authenticates user and returns token
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: user authenticated
+        '401':
+          description: invalid credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+              - email
+              - password
+  "/todos/{todo_id}/items":
+    parameters:
+    - name: todo_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Retrieves all items for a todo
+      tags:
+      - Items
+      security:
+      - jwt_auth: []
+      responses:
+        '200':
+          description: items found
+        '401':
+          description: unauthorized
+        '404':
+          description: todo not found
+    post:
+      summary: Creates an item for a todo
+      tags:
+      - Items
+      security:
+      - jwt_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: item created
+        '401':
+          description: unauthorized
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                done:
+                  type: boolean
+              required:
+              - name
+  "/todos/{todo_id}/items/{id}":
+    parameters:
+    - name: todo_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Retrieves an item
+      tags:
+      - Items
+      security:
+      - jwt_auth: []
+      responses:
+        '200':
+          description: item found
+        '401':
+          description: unauthorized
+        '404':
+          description: item not found
+    put:
+      summary: Updates an item
+      tags:
+      - Items
+      security:
+      - jwt_auth: []
+      parameters: []
+      responses:
+        '204':
+          description: item updated
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                done:
+                  type: boolean
+    delete:
+      summary: Deletes an item
+      tags:
+      - Items
+      security:
+      - jwt_auth: []
+      responses:
+        '204':
+          description: item deleted
+        '401':
+          description: unauthorized
+  "/todos":
+    get:
+      summary: Retrieves all todos
+      tags:
+      - Todos
+      security:
+      - jwt_auth: []
+      responses:
+        '200':
+          description: todos found
+        '401':
+          description: unauthorized
+    post:
+      summary: Creates a todo
+      tags:
+      - Todos
+      security:
+      - jwt_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: todo created
+        '401':
+          description: unauthorized
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                created_by:
+                  type: string
+              required:
+              - title
+  "/todos/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Retrieves a todo
+      tags:
+      - Todos
+      security:
+      - jwt_auth: []
+      responses:
+        '200':
+          description: todo found
+        '401':
+          description: unauthorized
+        '404':
+          description: todo not found
+    put:
+      summary: Updates a todo
+      tags:
+      - Todos
+      security:
+      - jwt_auth: []
+      parameters: []
+      responses:
+        '204':
+          description: todo updated
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+    delete:
+      summary: Deletes a todo
+      tags:
+      - Todos
+      security:
+      - jwt_auth: []
+      responses:
+        '204':
+          description: todo deleted
+        '401':
+          description: unauthorized
+  "/signup":
+    post:
+      summary: Creates a new user
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: user created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+              required:
+              - name
+              - email
+              - password
+servers:
+- url: http://localhost:3000
+  description: Development server
+  variables:
+    defaultHost:
+      default: http://localhost:3000
