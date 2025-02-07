@@ -1,0 +1,10 @@
+<% partial_to_render = private_message_date_check(message, previous_message) %>
+<%= render partial_to_render, message: message %>
+
+<li title="<%= message.created_at.to_s(:time) %>">
+  <div class="row">   
+    <div class="<%= sent_or_received(message, user) %> <%= seen_or_unseen(message) %>">
+      <%= message.body %>
+    </div>
+  </div>
+</li>
